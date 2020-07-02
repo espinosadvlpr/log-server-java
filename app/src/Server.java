@@ -9,27 +9,27 @@ import javax.servlet.http.*;
 // Extend HttpServlet class
 public class Server extends HttpServlet {
 
-    public void init() throws ServletException {
+	public void init() throws ServletException {
 
-    }
+	}
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        // Set response content type
-        response.setContentType("text/html");
+		// Set response content type
+		response.setContentType("text/html");
 
-        // Actual logic goes here.
-        PrintWriter out = response.getWriter();
-        String ip = request.getRemoteAddr();
-        writeLog("New log: "+ new Date() + " from: ");
-        out.println("<h1>" + "the IP: " + ip+ "is doing a request to the server." + "</h1>");
-    }
+		// Actual logic goes here.
+		PrintWriter out = response.getWriter();
+		String ip = request.getRemoteAddr();
+		writeLog("New log: " + new Date() + " from: " + ip);
+		out.println("<h1>" + "the IP: " + ip + " is doing a request to the server." + "</h1>");
+	}
 
-    private void writeLog(String sentence) {
+	private void writeLog(String sentence) {
 
 		FileWriter fichero = null;
 		try {
-			fichero = new FileWriter("/var/lib/tomcat9/webapps/app/src/log.txt", true);
+			fichero = new FileWriter("./log.txt", true);
 			fichero.write("\n" + sentence);
 			fichero.close();
 
@@ -45,7 +45,7 @@ public class Server extends HttpServlet {
 		}
 	}
 
-    public void destroy() {
-        // do nothing.
-    }
+	public void destroy() {
+		// do nothing.
+	}
 }
