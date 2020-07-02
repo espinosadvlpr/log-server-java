@@ -1,6 +1,8 @@
-import java.io.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Date;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -19,28 +21,29 @@ public class Server extends HttpServlet {
         // Actual logic goes here.
         PrintWriter out = response.getWriter();
         String ip = request.getRemoteAddr();
-        crearArchivo("log.txt", ip);
-        out.println("<h1>" + ip + "</h1>");
+        writeLog("New log: "+ new Date() + " from: ");
+        out.println("<h1>" + "the IP: " + ip+ "is doing a request to the server." + "</h1>");
     }
 
-    public void crearArchivo(String nombre, String requestIP) {
+    private void writeLog(String sentence) {
 
-        try {
-            File file = new File(nombre);
-            if (!file.exists()) {
-                file.createNewFile();
-            }
+		FileWriter fichero = null;
+		try {
+			fichero = new FileWriter("/var/lib/tomcat9/webapps/app/src/log.txt", true);
+			fichero.write("\n" + sentence);
+			fichero.close();
 
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
-            outputStreamWriter.write("New event from: " + requestIP);
-            outputStreamWriter.flush();
-            outputStreamWriter.close();
-            fileOutputStream.close();
-        } catch (IOException ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (null != fichero)
+					fichero.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+	}
 
     public void destroy() {
         // do nothing.
